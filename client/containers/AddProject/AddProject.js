@@ -140,7 +140,17 @@ class ProjectList extends Component {
                 </Select>
               )}
             </FormItem>
-
+            <FormItem {...formItemLayout} label="项目编码">
+              {getFieldDecorator('code', {
+                rules: [
+                  {
+                    required: false,
+                    message: '请输入项目编码',
+                    max: 32
+                  }
+                ]
+              })(<Input />)}
+            </FormItem>
             <hr className="breakline" />
 
             <FormItem

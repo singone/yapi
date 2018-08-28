@@ -183,6 +183,7 @@ export function addProject(data) {
     protocol,
     icon,
     color,
+    code,
     project_type
   } = data;
   const param = {
@@ -195,6 +196,7 @@ export function addProject(data) {
     group_name,
     icon,
     color,
+    code,
     project_type
   };
   return {
@@ -205,7 +207,7 @@ export function addProject(data) {
 
 // 修改项目
 export function updateProject(data) {
-  const { name, project_type, basepath, desc, _id, env, group_id, switch_notice, strice, is_json5 } = data;
+  const { name, project_type, basepath, desc, _id, env, group_id, switch_notice, strice, is_json5, code } = data;
   const param = {
     name,
     project_type,
@@ -216,7 +218,8 @@ export function updateProject(data) {
     env,
     group_id,
     strice,
-    is_json5
+    is_json5,
+    code
   };
   return {
     type: PROJECT_UPDATE,

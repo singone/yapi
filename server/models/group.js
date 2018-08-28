@@ -13,6 +13,7 @@ class groupModel extends baseModel {
       group_desc: String,
       add_time: Number,
       up_time: Number,
+      is_mock: Boolean,
       type: { type: String, default: 'public', enum: ['public', 'private'] },
       members: [
         {
@@ -72,7 +73,7 @@ class groupModel extends baseModel {
         uid: uid,
         type: 'private'
       })
-      .select('group_name _id group_desc add_time up_time type custom_field1')
+      .select('group_name _id group_desc add_time up_time type custom_field1 is_mock')
       .exec();
   }
 
@@ -81,7 +82,7 @@ class groupModel extends baseModel {
       .findOne({
         _id: id
       })
-      .select('uid group_name group_desc add_time up_time type custom_field1')
+      .select('uid group_name group_desc add_time up_time type custom_field1 is_mock')
       .exec();
   }
 
@@ -142,7 +143,7 @@ class groupModel extends baseModel {
       .find({
         type: 'public'
       })
-      .select('group_name _id group_desc add_time up_time type uid custom_field1')
+      .select('group_name _id group_desc add_time up_time type uid custom_field1 is_mock')
       .exec();
   }
 
@@ -161,6 +162,7 @@ class groupModel extends baseModel {
         custom_field1: data.custom_field1,
         group_name: data.group_name,
         group_desc: data.group_desc,
+        is_mock: data.is_mock,
         up_time: yapi.commons.time()
       }
     );

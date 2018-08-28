@@ -42,6 +42,7 @@ class groupController extends baseController {
       add: {
         '*group_name': group_name,
         group_desc: group_desc,
+        is_mock: 'boolen',
         owner_uids: ['number']
       },
       addMember: {
@@ -68,6 +69,7 @@ class groupController extends baseController {
         '*id': id,
         '*group_name': group_name,
         group_desc: group_desc,
+        is_mock: 'boolen',
         custom_field1: {
           name: 'string',
           enable: 'boolen'
@@ -153,6 +155,7 @@ class groupController extends baseController {
       group_name: params.group_name,
       group_desc: params.group_desc,
       uid: this.getUid(),
+      is_mock: params.is_mock || false,
       add_time: yapi.commons.time(),
       up_time: yapi.commons.time(),
       members: owners

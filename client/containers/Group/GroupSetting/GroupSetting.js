@@ -65,6 +65,7 @@ class GroupSetting extends Component {
     this.setState({
       currGroupName: props.currGroup.group_name,
       currGroupDesc: props.currGroup.group_desc,
+      isMock: props.currGroup.is_mock,
       custom_field1_name: props.currGroup.custom_field1.name,
       custom_field1_enable: props.currGroup.custom_field1.enable
     });
@@ -91,7 +92,11 @@ class GroupSetting extends Component {
       custom_field1_rule
     });
   };
-
+  changeMockStatus = value => {
+    this.setState({
+      isMock: value
+    });
+  }
   // 修改开启状态
   changeCustomEnable = e => {
     let custom_field1_rule = e ? !this.state.custom_field1_name : false;
@@ -127,6 +132,7 @@ class GroupSetting extends Component {
         name: this.state.custom_field1_name,
         enable: this.state.custom_field1_enable
       },
+      is_mock: this.state.isMock,
       id: this.props.currGroup._id
     });
 
@@ -263,6 +269,18 @@ class GroupSetting extends Component {
               checkedChildren="开"
               unCheckedChildren="关"
               onChange={this.changeCustomEnable}
+            />
+          </Col>
+        </Row>
+        <Row type="flex" justify="space-around" className="row" align="middle">
+          <Col span={4} className="label">
+           是否mock ：
+          </Col>
+          <Col span={20}>
+            <Switch
+              rows={3}
+              checked={this.state.isMock}
+              onChange={this.changeMockStatus}
             />
           </Col>
         </Row>

@@ -147,23 +147,35 @@ module.exports = async (ctx, next) => {
 
   let paths = path.split('/');
   let projectId = paths[2];
+  let groupId;
+  let projectCode;
+  console.log(paths);
   paths.splice(0, 3);
-  path = '/' + paths.join('/');
 
   ctx.set('Access-Control-Allow-Origin', '*');
-
   if (!projectId) {
     return (ctx.body = yapi.commons.resReturn(null, 400, 'projectId不能为空'));
   }
-
   let projectInst = yapi.getInst(projectModel),
     project;
-  try {
-    project = await projectInst.get(projectId);
-  } catch (e) {
-    return (ctx.body = yapi.commons.resReturn(null, 403, e.message));
-  }
 
+  // 判断是否根据分组得到
+  if (typeof projectId === 'string' && projectId.indexOf('group') === 0) {
+    projectCode = paths.shift();
+    groupId = Number(projectId.replace('group_', '')) || 0;
+    try {
+      project = await projectInst.getByCode(projectCode, groupId);
+    } catch (e) {
+      return (ctx.body = yapi.commons.resReturn(null, 403, e.message));
+    }
+  } else {
+    try {
+      project = await projectInst.get(projectId);
+    } catch (e) {
+      return (ctx.body = yapi.commons.resReturn(null, 403, e.message));
+    }
+  }
+  path = '/' + paths.join('/');
   if (!project) {
     return (ctx.body = yapi.commons.resReturn(null, 400, '不存在的项目'));
   }

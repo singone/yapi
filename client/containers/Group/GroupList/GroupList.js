@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon, Modal, Input, message, Row, Menu, Col, Popover, Tooltip } from 'antd';
+import { Icon, Modal, Input, message, Row, Menu, Col, Popover, Tooltip, Switch } from 'antd';
 import { autobind } from 'core-decorators';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
@@ -69,6 +69,7 @@ export default class GroupList extends Component {
     addGroupModalVisible: false,
     newGroupName: '',
     newGroupDesc: '',
+    isMock: false,
     currGroupName: '',
     currGroupDesc: '',
     groupList: [],
@@ -119,8 +120,8 @@ export default class GroupList extends Component {
   }
   @autobind
   async addGroup() {
-    const { newGroupName: group_name, newGroupDesc: group_desc, owner_uids } = this.state;
-    const res = await axios.post('/api/group/add', { group_name, group_desc, owner_uids });
+    const { newGroupName: group_name, newGroupDesc: group_desc, owner_uids, isMock: is_mock } = this.state;
+    const res = await axios.post('/api/group/add', { group_name, group_desc, owner_uids, is_mock });
     if (!res.data.errcode) {
       this.setState({
         newGroupName: '',
@@ -143,9 +144,9 @@ export default class GroupList extends Component {
   }
   @autobind
   async editGroup() {
-    const { currGroupName: group_name, currGroupDesc: group_desc } = this.state;
+    const { currGroupName: group_name, currGroupDesc: group_desc, isMock: is_mock } = this.state;
     const id = this.props.currGroup._id;
-    const res = await axios.post('/api/group/up', { group_name, group_desc, id });
+    const res = await axios.post('/api/group/up', { group_name, group_desc, id, is_mock});
     if (res.data.errcode) {
       message.error(res.data.errmsg);
     } else {
@@ -169,6 +170,11 @@ export default class GroupList extends Component {
   @autobind
   inputNewGroupDesc(e) {
     this.setState({ newGroupDesc: e.target.value });
+  }
+
+  @autobind
+  inputMockStatus(value) {
+    this.setState( {isMock: value})
   }
 
   @autobind
@@ -312,6 +318,15 @@ export default class GroupList extends Component {
               </Col>
               <Col span="15">
                 <UsernameAutoComplete callbackState={this.onUserSelect} />
+              </Col>
+            </Row>
+            <Row gutter={6} className="modal-input">
+              <Col span="5">
+
+                <div className="label">按组mock：</div>
+              </Col>
+              <Col span="15">
+                <Switch checked={this.state.isMock} onChange={this.inputMockStatus} />
               </Col>
             </Row>
           </Modal>

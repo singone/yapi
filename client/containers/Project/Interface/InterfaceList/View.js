@@ -17,6 +17,7 @@ const HTTP_METHOD = constants.HTTP_METHOD;
 @connect(state => {
   return {
     curData: state.inter.curdata,
+    currGroup: state.group,
     custom_field: state.group.field,
     currProject: state.project.currProject
   };
@@ -30,6 +31,7 @@ class View extends Component {
     };
   }
   static propTypes = {
+    currGroup: PropTypes.object,
     curData: PropTypes.object,
     currProject: PropTypes.object,
     custom_field: PropTypes.object
@@ -255,6 +257,7 @@ class View extends Component {
 
   render() {
     const dataSource = [];
+
     if (this.props.curData.req_headers && this.props.curData.req_headers.length) {
       this.props.curData.req_headers.map((item, i) => {
         dataSource.push({
@@ -372,6 +375,18 @@ class View extends Component {
       methodColor = 'get';
     }
 
+    let mockUrl = location.protocol + '//' + location.hostname +
+      (location.port !== '' ? ':' + location.port : '') +
+      '/mock/';
+    if (this.props.currProject.code) {
+      mockUrl += `group_${this.props.currProject.group_id}/${this.props.currProject.code}${this.props.currProject.basepath}${
+        this.props.curData.path
+        }`;
+    } else {
+      mockUrl += `${this.props.currProject._id}${this.props.currProject.basepath}${
+        this.props.curData.path
+        }`;
+    }
     let res = (
       <div className="caseContainer">
         <h2 className="interface-title" style={{ marginTop: 0 }}>
@@ -449,24 +464,12 @@ class View extends Component {
                 className="href"
                 onClick={() =>
                   window.open(
-                    location.protocol +
-                      '//' +
-                      location.hostname +
-                      (location.port !== '' ? ':' + location.port : '') +
-                      `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${
-                        this.props.curData.path
-                      }`,
+                    mockUrl,
                     '_blank'
                   )
                 }
               >
-                {location.protocol +
-                  '//' +
-                  location.hostname +
-                  (location.port !== '' ? ':' + location.port : '') +
-                  `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${
-                    this.props.curData.path
-                  }`}
+                {mockUrl}
               </span>
             </Col>
           </Row>

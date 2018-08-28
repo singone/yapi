@@ -39,6 +39,11 @@ class projectController extends baseController {
       type: 'string',
       default: ''
     };
+    const code = {
+      type: 'string',
+      default: '',
+    };
+
     const group_id = 'number';
     const group_name = 'string';
     const project_type = {
@@ -61,6 +66,7 @@ class projectController extends baseController {
         desc: desc,
         color,
         icon,
+        code,
         project_type
       },
       copy: {
@@ -77,6 +83,7 @@ class projectController extends baseController {
         desc,
         color,
         icon,
+        code,
         project_type
       },
       addMember: {
@@ -192,6 +199,12 @@ class projectController extends baseController {
     }
 
     let checkRepeat = await this.Model.checkNameRepeat(params.name, params.group_id);
+    if (params.code) {
+      const checkCode = await this.Model.checkCodeRepeat(params.code, params.group_id);
+      if (checkCode > 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的项目编码'));
+      }
+    }
 
     if (checkRepeat > 0) {
       return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的项目名'));
@@ -217,6 +230,7 @@ class projectController extends baseController {
       add_time: yapi.commons.time(),
       up_time: yapi.commons.time(),
       is_json5: false,
+      code: params.code,
       env: [{ name: 'local', domain: 'http://127.0.0.1' }]
     };
 
@@ -779,8 +793,10 @@ class projectController extends baseController {
         desc: 'string',
         pre_script: 'string',
         after_script: 'string',
-        project_mock_script: 'string'
+        project_mock_script: 'string',
+        code: 'string'
       });
+      console.log(params);
 
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 405, '项目id不能为空'));
@@ -801,6 +817,9 @@ class projectController extends baseController {
       if (projectData.name === params.name) {
         delete params.name;
       }
+      if (projectData.code === params.code) {
+        delete params.code;
+      }
 
       if (params.name) {
         let checkRepeat = await this.Model.checkNameRepeat(params.name, params.group_id);
@@ -809,6 +828,12 @@ class projectController extends baseController {
         }
       }
 
+      if (params.code) {
+        let checkRepeat = await this.Model.checkCodeRepeat(params.code, params.group_id);
+        if (checkRepeat > 0) {
+          return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的项目编码'));
+        }
+      }
       let data = {
         up_time: yapi.commons.time()
       };

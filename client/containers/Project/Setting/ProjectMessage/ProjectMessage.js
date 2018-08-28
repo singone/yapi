@@ -106,6 +106,7 @@ class ProjectMessage extends Component {
     const { form, updateProject, projectMsg, groupList } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
+        console.log(values);
         let assignValue = Object.assign(projectMsg, values);
         values.protocol = this.state.protocol.split(':')[0];
         const group_id = assignValue.group_id;
@@ -214,15 +215,20 @@ class ProjectMessage extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { projectMsg, currGroup } = this.props;
-    const mockUrl =
-      location.protocol +
+    console.log(projectMsg, currGroup);
+    let mockUrl =location.protocol +
       '//' +
       location.hostname +
       (location.port !== '' ? ':' + location.port : '') +
-      `/mock/${projectMsg._id}${projectMsg.basepath}+$接口请求路径`;
+      '/mock/';
+    if (currGroup.is_mock) {
+      mockUrl += `group_${currGroup._id}/${projectMsg.code || ''}${projectMsg.basepath}+$接口请求路径`
+    } else {
+      mockUrl += `${projectMsg._id}${projectMsg.basepath}+$接口请求路径`;
+    }
     let initFormValues = {};
-    const { name, basepath, desc, project_type, group_id, switch_notice, strice, is_json5 } = projectMsg;
-    initFormValues = { name, basepath, desc, project_type, group_id, switch_notice, strice , is_json5};
+    const { name, basepath, desc, project_type, group_id, switch_notice, strice, is_json5, code } = projectMsg;
+    initFormValues = { name, basepath, desc, project_type, group_id, switch_notice, code, strice , is_json5};
 
     const colorArr = entries(constants.PROJECT_COLOR);
     const colorSelector = (
@@ -333,7 +339,15 @@ class ProjectMessage extends Component {
                 ]
               })(<Input />)}
             </FormItem>
-
+            {
+              currGroup.is_mock ? (
+                <FormItem {...formItemLayout} label="项目编码">
+                  {getFieldDecorator('code', {
+                    initialValue: initFormValues.code
+                  })(<Input />)}
+                </FormItem>
+              ) : null
+            }
             <FormItem
               {...formItemLayout}
               label={

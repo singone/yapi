@@ -179,6 +179,10 @@ module.exports = {
               '?sourceMap'
           )
         });
+        baseConfig.module.loaders.push({
+          test:  /\.(png|jpg|gif|jpeg)$/,
+          loader: 'url-loader',
+        },);
 
         baseConfig.module.preLoaders.push({
           test: /\.(js|jsx)$/,
