@@ -34,8 +34,7 @@ class projectModel extends baseModel {
       project_mock_script: String,
       is_mock_open: { type: Boolean, default: false },
       strice: { type: Boolean, default: false },
-      is_json5: { type: Boolean, default: true },
-      code: { type: String, default: '' }
+      is_json5: { type: Boolean, default: true }
     };
   }
 
@@ -65,10 +64,10 @@ class projectModel extends baseModel {
       })
       .exec();
   }
-  getByCode(code, groupId) {
+  getByBasepath(basepath, groupId) {
     return this.model
       .findOne({
-        code,
+        basepath,
         group_id: groupId,
       })
       .exec();
@@ -92,7 +91,7 @@ class projectModel extends baseModel {
   getBaseInfo(id, select) {
     select =
       select ||
-      '_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 code';
+      '_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5';
     return this.model
       .findOne({
         _id: id
@@ -115,9 +114,9 @@ class projectModel extends baseModel {
       group_id: groupid
     });
   }
-  checkCodeRepeat(code, groupid) {
+  checkBasepathRepeat(basepath, groupid) {
     return this.model.count({
-      code,
+      basepath,
       group_id: groupid,
     });
   }
@@ -133,7 +132,7 @@ class projectModel extends baseModel {
     return this.model
       .find(params)
       .select(
-        '_id uid name basepath switch_notice code desc group_id project_type color icon env add_time up_time'
+        '_id uid name basepath switch_notice desc group_id project_type color icon env add_time up_time'
       )
       .sort({ _id: -1 })
       .exec();

@@ -148,7 +148,7 @@ module.exports = async (ctx, next) => {
   let paths = path.split('/');
   let projectId = paths[2];
   let groupId;
-  let projectCode;
+  let basepath;
   console.log(paths);
   paths.splice(0, 3);
 
@@ -161,10 +161,10 @@ module.exports = async (ctx, next) => {
 
   // 判断是否根据分组得到
   if (typeof projectId === 'string' && projectId.indexOf('group') === 0) {
-    projectCode = paths.shift();
+    basepath = '/' + paths[0]; // 得到基本路径
     groupId = Number(projectId.replace('group_', '')) || 0;
     try {
-      project = await projectInst.getByCode(projectCode, groupId);
+      project = await projectInst.getByBasepath(basepath, groupId);
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(null, 403, e.message));
     }

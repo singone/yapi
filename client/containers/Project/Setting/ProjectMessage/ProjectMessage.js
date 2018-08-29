@@ -222,7 +222,7 @@ class ProjectMessage extends Component {
       (location.port !== '' ? ':' + location.port : '') +
       '/mock/';
     if (currGroup.is_mock) {
-      mockUrl += `group_${currGroup._id}/${projectMsg.code || ''}${projectMsg.basepath}+$接口请求路径`
+      mockUrl += `group_${currGroup._id}${projectMsg.basepath}+$接口请求路径`
     } else {
       mockUrl += `${projectMsg._id}${projectMsg.basepath}+$接口请求路径`;
     }
@@ -333,21 +333,13 @@ class ProjectMessage extends Component {
                 initialValue: initFormValues.basepath,
                 rules: [
                   {
-                    required: false,
+                    required: currGroup.is_mock,
                     message: '请输入基本路径! '
                   }
                 ]
               })(<Input />)}
             </FormItem>
-            {
-              currGroup.is_mock ? (
-                <FormItem {...formItemLayout} label="项目编码">
-                  {getFieldDecorator('code', {
-                    initialValue: initFormValues.code
-                  })(<Input />)}
-                </FormItem>
-              ) : null
-            }
+
             <FormItem
               {...formItemLayout}
               label={

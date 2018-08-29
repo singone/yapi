@@ -378,8 +378,8 @@ class View extends Component {
     let mockUrl = location.protocol + '//' + location.hostname +
       (location.port !== '' ? ':' + location.port : '') +
       '/mock/';
-    if (this.props.currProject.code) {
-      mockUrl += `group_${this.props.currProject.group_id}/${this.props.currProject.code}${this.props.currProject.basepath}${
+    if (this.props.currProject.basepath) {
+      mockUrl += `group_${this.props.currProject.group_id}${this.props.currProject.basepath}${
         this.props.curData.path
         }`;
     } else {

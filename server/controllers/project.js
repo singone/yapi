@@ -199,10 +199,10 @@ class projectController extends baseController {
     }
 
     let checkRepeat = await this.Model.checkNameRepeat(params.name, params.group_id);
-    if (params.code) {
-      const checkCode = await this.Model.checkCodeRepeat(params.code, params.group_id);
+    if (params.basepath) {
+      const checkCode = await this.Model.checkBasepathRepeat(params.basepath, params.group_id);
       if (checkCode > 0) {
-        return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的项目编码'));
+        return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的基本路径'));
       }
     }
 
@@ -807,18 +807,21 @@ class projectController extends baseController {
       }
 
       let projectData = await this.Model.get(id);
+      const handleBase = this.handleBasepath(params.basepath);
+
 
       if (params.basepath) {
-        if ((params.basepath = this.handleBasepath(params.basepath)) === false) {
+        if (handleBase === false) {
           return (ctx.body = yapi.commons.resReturn(null, 401, 'basepath格式有误'));
         }
       }
 
+      if (projectData.basepath === handleBase) {
+        delete params.basepath;
+      }
+
       if (projectData.name === params.name) {
         delete params.name;
-      }
-      if (projectData.code === params.code) {
-        delete params.code;
       }
 
       if (params.name) {
@@ -828,10 +831,10 @@ class projectController extends baseController {
         }
       }
 
-      if (params.code) {
-        let checkRepeat = await this.Model.checkCodeRepeat(params.code, params.group_id);
+      if (params.basepath && handleBase) {
+        let checkRepeat = await this.Model.checkBasepathRepeat(handleBase, params.group_id);
         if (checkRepeat > 0) {
-          return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的项目编码'));
+          return (ctx.body = yapi.commons.resReturn(null, 401, '已存在的基本路径'));
         }
       }
       let data = {
