@@ -149,7 +149,7 @@ module.exports = async (ctx, next) => {
   let projectId = paths[2];
   let groupId;
   let basepath;
-  console.log(paths);
+  // console.log(paths);
   paths.splice(0, 3);
 
   ctx.set('Access-Control-Allow-Origin', '*');
